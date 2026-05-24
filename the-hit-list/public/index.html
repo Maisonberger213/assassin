@@ -258,6 +258,7 @@
 <script>
 const $ = (id) => document.getElementById(id);
 let state = { code:null, playerId:null, es:null, pack:"classic" };
+["/rebecca.jpeg", "/benson.jpeg"].forEach(src => { new Image().src = src; });
 const PACK_HINTS = {
   classic: "All-ages everyday words.",
   spicy: "Boozy, crude, wedding-roast humor. Adults only \u{1F608}"

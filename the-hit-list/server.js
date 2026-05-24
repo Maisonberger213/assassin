@@ -79,6 +79,188 @@ const VIP_LINES = {
 };
 function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
+// ---- Relationship-specific kill messages --------------------------------
+function normName(n) { return String(n).toLowerCase().replace(/[^a-z]/g, ""); }
+const IS = {
+  aileen:  n => ["aileen","eileen"].some(x => n.includes(x)),
+  norm:    n => n === "norm" || n.includes("norman"),
+  rebecca: n => ["rebecca","rebeca","rebekah","becca","becka","becky","becki","bec","reb","reba"].some(x => n === x || n.startsWith(x) || n.includes(x)),
+  benson:  n => n === "ben" || ["benson","bensen","bensun","benjamin","benny","benji","benj"].some(x => n === x || n.startsWith(x) || n.includes(x)),
+  mel:     n => n === "mel" || ["melissa","melanie"].some(x => n.includes(x)),
+  denny:   n => ["denny","dennis"].some(x => n === x || n.includes(x)),
+  colin:   n => ["colin","collin"].some(x => n === x || n.includes(x)),
+  maya:    n => ["maya","maia"].some(x => n === x || n.includes(x)),
+  kelsey:  n => ["kelsey","kelsie","kelsi"].some(x => n === x || n.includes(x)),
+  leo:     n => n === "leo" || ["leon","leonardo"].some(x => n.includes(x)),
+  alysha:  n => ["alysha","alisha","alyssa","alicia","alycia"].some(x => n === x || n.includes(x)),
+  julian:  n => ["julian","julien","julio"].some(x => n === x || n.includes(x)),
+  darryl:  n => ["darryl","daryl","darrell"].some(x => n === x || n.includes(x)),
+};
+const RELATIONSHIP_LINES = [
+  { k: IS.aileen, v: IS.norm, lines: [
+    "You just killed the breadwinner. Enjoy splitting the bill.",
+    "Norm is down. Who's paying the mortgage now, Aileen?",
+    "Eliminated your own husband. Bold financial decision.",
+    "Norm eliminated. Time to update the life insurance.",
+    "You got your own husband. Honestly iconic.",
+  ]},
+  { k: IS.norm, v: IS.aileen, lines: [
+    "You just eliminated your wife. Bold move, Norman.",
+    "Aileen is down. Enjoy the silence while it lasts.",
+    "Got your own wife. The couples therapist is shaking.",
+    "Aileen eliminated. You'll be sleeping on the couch for this.",
+    "Took out Aileen. She's already planning her revenge.",
+  ]},
+  { k: IS.mel, v: IS.denny, lines: [
+    "You killed your own boyfriend. Iconic couple behavior.",
+    "Denny is down. He should've seen that coming.",
+    "Got your man. Zero remorse. We respect it.",
+    "Denny eliminated. And yet somehow this makes you love each other more.",
+    "Eliminated Denny. The relationship survived this one though.",
+  ]},
+  { k: IS.denny, v: IS.mel, lines: [
+    "You just bodied your girlfriend. Smooth.",
+    "Mel is down. Hope the couch is comfortable.",
+    "Eliminated Mel. Bold move for a man who needs a ride home.",
+    "Got your girl. She's already plotting.",
+    "Mel eliminated. You're so dead when this game ends.",
+  ]},
+  { k: IS.colin, v: IS.maya, lines: [
+    "You killed your crush. Classic Colin.",
+    "Maya eliminated. That's one way to shoot your shot.",
+    "Took out Maya. Your flirting was going so well too.",
+    "Maya is down. The situationship is officially over.",
+    "Eliminated the one person you were trying to impress. Iconic.",
+  ]},
+  { k: IS.maya, v: IS.colin, lines: [
+    "You just ended Colin's entire pursuit. Cold.",
+    "Colin eliminated. He thought you two had something.",
+    "Took out your biggest fan. Ice cold.",
+    "Colin is down. He's going to bring this up for years.",
+    "Maya sends Colin to his grave. The chase is over.",
+  ]},
+  { k: IS.kelsey, v: IS.leo, lines: [
+    "You just killed your husband. Marriage goals.",
+    "Leo eliminated. The vows said nothing about this.",
+    "Got your own husband. Absolutely ruthless.",
+    "Leo is down. Kelsey showing no mercy.",
+    "Leo eliminated by his own wife. She warned him.",
+  ]},
+  { k: IS.leo, v: IS.kelsey, lines: [
+    "You just took out your wife. Smooth, Leo.",
+    "Got your own wife. The honeymoon phase is officially over.",
+    "Kelsey is down. Sleep with one eye open, Leo.",
+    "Kelsey eliminated. She WILL remember this.",
+    "Eliminated Kelsey. He's going to regret this.",
+  ]},
+  { k: IS.leo, v: IS.colin, lines: [
+    "Colin was supposed to be your boy. Supposed to be.",
+    "He just started trusting you. You did him like that.",
+    "He vouched for you. You returned the favor like this.",
+    "Your guy. Gone. Leo showing no loyalty.",
+    "New friendship, zero loyalty. That's Leo.",
+  ]},
+  { k: IS.colin, v: IS.leo, lines: [
+    "Leo was supposed to be your boy. Supposed to be.",
+    "He vouched for you. You did him like that.",
+    "He had your back. You just put a knife in his.",
+    "Your guy. Gone. Colin with zero loyalty.",
+    "The bromance lasted exactly one game.",
+  ]},
+  { k: IS.alysha, v: IS.julian, lines: [
+    "You just eliminated your husband. Iconic wife behavior.",
+    "Julian is down. Alysha showing zero chill.",
+    "Julian eliminated by his own wife. Deserved.",
+    "Took out Julian. The vows clearly didn't cover this.",
+    "Somewhere a divorce lawyer just smiled.",
+  ]},
+  { k: IS.julian, v: IS.alysha, lines: [
+    "You just took out your wife. Bold, Julian.",
+    "Alysha eliminated. He's sleeping on the couch forever.",
+    "Got your own wife. The couples retreat can't come soon enough.",
+    "Alysha is down. Julian about to have a very bad week.",
+    "Julian eliminates Alysha. She's already telling the group chat.",
+  ]},
+  { k: IS.rebecca, v: IS.alysha, lines: [
+    "Alysha was your girl. Past tense now.",
+    "She came to Tulum for you. You did her like that.",
+    "She knows every embarrassing thing about you. And you still took her out.",
+    "Your girl. Gone. Rebecca felt nothing.",
+    "Zero loyalty from the bride. At her own party.",
+  ]},
+  { k: IS.alysha, v: IS.rebecca, lines: [
+    "You came all the way to Tulum for her. Then you did that.",
+    "She's the whole reason you're here. Gone.",
+    "You just took out the person this whole trip is FOR. Ice cold.",
+    "Rebecca was your girl. You just changed that.",
+    "Alysha is the real villain of this trip.",
+  ]},
+  { k: IS.maya, v: IS.rebecca, lines: [
+    "You came all the way to Tulum for her. Then you did that.",
+    "She's the whole reason you're here. Gone.",
+    "You just took out the one person this whole trip is FOR. Cold, Maya.",
+    "Rebecca was your girl. You just changed that.",
+    "Maya eliminates Rebecca. No remorse whatsoever.",
+  ]},
+  { k: IS.rebecca, v: IS.maya, lines: [
+    "Maya was your girl. Past tense.",
+    "She came to Tulum for you. You did her like that.",
+    "She'd cover for you no questions asked. You covered her differently.",
+    "Zero loyalty from the bride. Even to her own people.",
+    "Your girl. At your own party. Rebecca felt nothing.",
+  ]},
+  { k: IS.alysha, v: IS.maya, lines: [
+    "Maya was your girl. Past tense.",
+    "She had your back every time. You just put a knife in hers.",
+    "She came all the way to Tulum. You did her like that.",
+    "Your girl. Gone. Alysha felt nothing.",
+    "Some friendships don't survive Tulum.",
+  ]},
+  { k: IS.maya, v: IS.alysha, lines: [
+    "Alysha was your girl. Past tense.",
+    "She had your back every time. You just put a knife in hers.",
+    "She came all the way to Tulum. You did her like that.",
+    "Your girl. Gone. Maya did it without blinking.",
+    "Some friendships don't survive Tulum.",
+  ]},
+  { k: IS.benson, v: IS.darryl, lines: [
+    "Darryl was your boy. Your actual boy. You did him like that.",
+    "Your day one. Gone. Benson felt nothing.",
+    "He was your ride or die. Past tense.",
+    "Your right hand. Gone. You did that.",
+    "Darryl is down. Benson felt nothing. Absolutely nothing.",
+  ]},
+  { k: IS.darryl, v: IS.benson, lines: [
+    "You just killed the groom. Your boy. At his own send-off.",
+    "He trusted you with the speech. You took him out instead.",
+    "Your day one. The groom. Gone. You did that.",
+    "Some best man you are.",
+    "Benson is down. Darryl's toast just got very uncomfortable.",
+  ]},
+  { k: IS.benson, v: IS.mel, lines: [
+    "Finally. Benson has been waiting for this all trip.",
+    "Mel eliminated. Benson is absolutely delighted.",
+    "You got Mel. You've been wanting to do that since day one.",
+    "Mel is down. Benson trying to hide his smile. Failing.",
+    "Benson eliminates Mel. He told everyone he would.",
+  ]},
+  { k: IS.mel, v: IS.benson, lines: [
+    "You just killed Benson. He's furious and impressed at the same time.",
+    "Benson eliminated by Mel. He'll never admit he walked into that.",
+    "Took out Benson. He's going to talk about this for years.",
+    "Benson is down. Mel with the kill she's been planning all trip.",
+    "Mel eliminates Benson. He hates that he respects it.",
+  ]},
+];
+function getRelationshipLines(killerName, victimName) {
+  const k = normName(killerName);
+  const v = normName(victimName);
+  for (const rel of RELATIONSHIP_LINES) {
+    if (rel.k(k) && rel.v(v)) return rel.lines;
+  }
+  return null;
+}
+
 // Dark-humour send-off shown on the screen of whoever just got eliminated.
 // Mexico bachelor-party flavor — R-rated, crude, no mercy. Adults only.
 const DEATH_LINES = [
@@ -325,17 +507,22 @@ function processKill(room, assassinId, victimId) {
   // The freshly-eliminated player gets a dark-humour send-off on their screen.
   v.flash = { id: fid(), text: pick(DEATH_LINES), emoji: "💀", btn: "Pour one out 🍹" };
 
-  // Guest-of-honor takedown? The KILLER gets a special message too.
-  const role = vipRole(v.name);
-  if (role) {
-    a.flash = {
-      id: fid(),
-      text: pick(VIP_LINES[role]),
-      emoji: role === "bride" ? "👰" : "🤵",
-      img: role === "bride" ? "/rebecca.jpeg" : "/benson.jpeg",
-      btn: "Hell yeah",
-    };
-    room.lastEvent = `${a.name} took out the ${role === "bride" ? "BRIDE 👰" : "GROOM 🤵"}!`;
+  // Killer flash: relationship message takes priority over generic VIP message.
+  const relLines = getRelationshipLines(a.name, v.name);
+  if (relLines) {
+    a.flash = { id: fid(), text: pick(relLines), emoji: "💀", btn: "Damn." };
+  } else {
+    const role = vipRole(v.name);
+    if (role) {
+      a.flash = {
+        id: fid(),
+        text: pick(VIP_LINES[role]),
+        emoji: role === "bride" ? "👰" : "🤵",
+        img: role === "bride" ? "/rebecca.jpeg" : "/benson.jpeg",
+        btn: "Hell yeah",
+      };
+      room.lastEvent = `${a.name} took out the ${role === "bride" ? "BRIDE 👰" : "GROOM 🤵"}!`;
+    }
   }
 
   // Win check: last one standing, or you now target yourself.
