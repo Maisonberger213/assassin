@@ -221,14 +221,14 @@ const RELATIONSHIP_LINES = [
     "Your girl. Gone. Maya did it without blinking.",
     "Some friendships don't survive Tulum.",
   ]},
-  { k: IS.benson, v: IS.darryl, lines: [
+  { k: IS.benson, v: IS.darryl, imgs: ["/benson-darryl.jpeg", "/benson-darryl2.jpeg"], lines: [
     "Darryl was your boy. Your actual boy. You did him like that.",
     "Your day one. Gone. Benson felt nothing.",
     "He was your ride or die. Past tense.",
     "Your right hand. Gone. You did that.",
     "Darryl is down. Benson felt nothing. Absolutely nothing.",
   ]},
-  { k: IS.darryl, v: IS.benson, lines: [
+  { k: IS.darryl, v: IS.benson, imgs: ["/benson-darryl.jpeg", "/benson-darryl2.jpeg"], lines: [
     "You just killed the groom. Your boy. At his own send-off.",
     "He trusted you with the speech. You took him out instead.",
     "Your day one. The groom. Gone. You did that.",
@@ -250,11 +250,11 @@ const RELATIONSHIP_LINES = [
     "Mel eliminates Benson. He hates that he respects it.",
   ]},
 ];
-function getRelationshipLines(killerName, victimName) {
+function getRelationship(killerName, victimName) {
   const k = normName(killerName);
   const v = normName(victimName);
   for (const rel of RELATIONSHIP_LINES) {
-    if (rel.k(k) && rel.v(v)) return rel.lines;
+    if (rel.k(k) && rel.v(v)) return rel;
   }
   return null;
 }
@@ -506,9 +506,9 @@ function processKill(room, assassinId, victimId) {
   v.flash = { id: fid(), text: pick(DEATH_LINES), emoji: "💀", btn: "Pour one out 🍹" };
 
   // Killer flash: relationship message takes priority over generic VIP message.
-  const relLines = getRelationshipLines(a.name, v.name);
-  if (relLines) {
-    a.flash = { id: fid(), text: pick(relLines), emoji: "💀", btn: "Damn." };
+  const rel = getRelationship(a.name, v.name);
+  if (rel) {
+    a.flash = { id: fid(), text: pick(rel.lines), emoji: "💀", btn: "Damn.", ...(rel.imgs ? { img: pick(rel.imgs) } : {}) };
   } else {
     const role = vipRole(v.name);
     if (role) {
