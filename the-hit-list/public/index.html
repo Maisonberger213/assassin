@@ -247,6 +247,7 @@
   <!-- Pop-up overlay: death send-off (victim) or VIP takedown (killer) -->
   <div id="flash" class="flash-overlay hidden">
     <div class="flash-box">
+      <img id="flashImg" src="" alt="" style="width:100%;max-height:220px;object-fit:cover;border-radius:12px;margin-bottom:12px;display:none;" />
       <div id="flashEmoji" class="flash-emoji">&#128128;</div>
       <div id="flashText" class="flash-text"></div>
       <button id="flashOk">OK</button>
@@ -305,7 +306,9 @@ function render(s){
   // VIP takedown overlay (bride/groom) — show once per new flash
   if(s.flash && s.flash.id !== lastFlashId){
     lastFlashId = s.flash.id;
-    $("flashEmoji").textContent = s.flash.emoji || "\u{1F480}";
+    const img = $("flashImg");
+    if(s.flash.img){ img.src = s.flash.img; img.style.display = "block"; } else { img.style.display = "none"; img.src = ""; }
+    $("flashEmoji").textContent = s.flash.img ? "" : (s.flash.emoji || "\u{1F480}");
     $("flashText").textContent = s.flash.text;
     $("flashOk").textContent = s.flash.btn || "OK";
     $("flash").classList.remove("hidden");

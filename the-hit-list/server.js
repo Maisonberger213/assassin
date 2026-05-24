@@ -53,9 +53,11 @@ const DEFAULT_PACK = "classic";
 // (cheeky, R-rated) message. Names are matched loosely.
 function vipRole(name) {
   const n = String(name).toLowerCase().replace(/[^a-z]/g, "");
-  if (["rebecca", "becca", "becky", "bec", "reb"].some((x) => n === x) || n.includes("rebecca") || n.includes("becca"))
+  const brideNames = ["rebecca", "rebeca", "rebekah", "becca", "becka", "becky", "becki", "bec", "reb", "reba"];
+  if (brideNames.some((x) => n === x || n.startsWith(x) || n.includes(x)))
     return "bride";
-  if (["ben", "benson", "benny", "benji", "benjamin"].some((x) => n === x) || n.startsWith("benson"))
+  const groomNames = ["benson", "bensen", "bensun", "ben", "benny", "benji", "benj", "benjamin"];
+  if (groomNames.some((x) => n === x || n.startsWith(x) || n.includes(x)))
     return "groom";
   return null;
 }
