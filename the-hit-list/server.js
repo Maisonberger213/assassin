@@ -126,17 +126,16 @@ const RELATIONSHIP_LINES = [
     "Mel eliminated. You're so dead when this game ends.",
   ]},
   { k: IS.colin, v: IS.maya, lines: [
-    "You killed your crush. Classic Colin.",
     "Maya eliminated. That's one way to shoot your shot.",
-    "Took out Maya. Your flirting was going so well too.",
+    "She couldn't handle your game. Maya eliminated.",
     "Maya is down. The situationship is officially over.",
-    "Eliminated the one person you were trying to impress. Iconic.",
+    "Colin with zero hesitation. Maya never saw it coming.",
   ]},
   { k: IS.maya, v: IS.colin, lines: [
+    "You just killed Colin. A simple 'no' would have sufficed.",
     "You just ended Colin's entire pursuit. Cold.",
     "Colin eliminated. He thought you two had something.",
     "Took out your biggest fan. Ice cold.",
-    "Colin is down. He's going to bring this up for years.",
     "Maya sends Colin to his grave. The chase is over.",
   ]},
   { k: IS.kelsey, v: IS.leo, lines: [
