@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<meta name="theme-color" content="#140a0d" />
+<title>The Hit List</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#140a0d; --panel:#1f1318; --panel2:#281920; --line:#3a2630;
+    --txt:#f3ece4; --muted:#a7929a; --accent:#b11226; --accent-h:#cf1a32; --accent2:#d4af37;
+    --green:#3fae7e; --blue:#c79a4a;
+    --serif:"Cormorant Garamond", Georgia, "Times New Roman", serif;
+    --sans:"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;height:100%;}
+  body{
+    background:
+      radial-gradient(1100px 520px at 50% -12%, #3a1620 0%, rgba(58,22,32,0) 55%),
+      radial-gradient(900px 600px at 50% 120%, #1c0e13 0%, var(--bg) 60%);
+    color:var(--txt); font-family:var(--sans);
+    display:flex; justify-content:center; min-height:100%;
+  }
+  #app{width:100%; max-width:480px; padding:22px 18px 40px; display:flex; flex-direction:column; min-height:100vh;}
+  h1{margin:4px 0 2px; text-align:center;}
+  .logo{font-family:var(--serif); font-weight:600; line-height:1.02; letter-spacing:.5px;}
+  .logo .l1{display:block; font-size:30px; color:var(--txt);}
+  .logo .l2{display:block; font-size:46px; color:var(--accent); text-shadow:0 2px 18px rgba(177,18,38,.4);}
+  .logo .rings{display:block; color:var(--accent2); font-size:12px; font-family:var(--sans); font-weight:700; letter-spacing:3px; margin:8px 0 2px;}
+  .tag{color:var(--muted); text-align:center; font-size:13px; margin-bottom:22px; font-style:italic; font-family:var(--serif); font-size:16px;}
+  .card{background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:18px; margin-bottom:14px;}
+  label{display:block; font-size:12px; color:var(--muted); margin:0 0 6px; text-transform:uppercase; letter-spacing:.5px;}
+  input{
+    width:100%; padding:14px; font-size:17px; border-radius:12px; border:1px solid var(--line);
+    background:var(--panel2); color:var(--txt); margin-bottom:14px; outline:none;
+  }
+  input:focus{border-color:var(--blue);}
+  input.code{letter-spacing:6px; text-align:center; font-weight:700; text-transform:uppercase;}
+  button{
+    width:100%; padding:15px; font-size:17px; font-weight:700; border:none; border-radius:12px;
+    background:var(--accent); color:#fff; cursor:pointer; transition:transform .05s, background .15s, filter .15s;
+  }
+  @media (hover:hover){ button:hover:not(:disabled){background:var(--accent-h);} }
+  button:focus-visible{outline:2px solid var(--accent2); outline-offset:2px;}
+  button:active{transform:scale(.98);}
+  button:disabled{filter:grayscale(.6) brightness(.7); cursor:not-allowed;}
+  button.secondary{background:var(--panel2); border:1px solid var(--line); color:var(--txt);}
+  button.green{background:var(--green);}
+  button.ghost{background:transparent; color:var(--muted); font-weight:600; padding:10px;}
+  .divider{display:flex; align-items:center; gap:12px; color:var(--muted); font-size:12px; margin:6px 0 16px;}
+  .divider:before,.divider:after{content:""; flex:1; height:1px; background:var(--line);}
+  .hidden{display:none !important;}
+  .err{background:#3a1620; border:1px solid #6e2030; color:#ff9aa8; padding:10px 12px; border-radius:10px; font-size:14px; margin-bottom:12px;}
+  .roomcode{font-size:40px; font-weight:800; letter-spacing:10px; text-align:center; color:var(--accent2);}
+  .center{text-align:center;}
+  .muted{color:var(--muted); font-size:13px;}
+  .players{list-style:none; padding:0; margin:10px 0 0;}
+  .players li{display:flex; align-items:center; gap:10px; padding:11px 12px; border-radius:10px; background:var(--panel2); margin-bottom:8px; font-size:16px;}
+  .dot{width:9px; height:9px; border-radius:50%; background:#444b59; flex:none;}
+  .dot.on{background:var(--green);}
+  .badge{margin-left:auto; font-size:11px; color:var(--muted); background:#0d0f14; border:1px solid var(--line); padding:3px 8px; border-radius:20px;}
+  .badge.host{color:var(--accent2); border-color:#5a4410;}
+  .dead{opacity:.45; text-decoration:line-through;}
+  .skull{margin-left:auto;}
+  .mission{background:linear-gradient(160deg,#1f2531,#161a22); border:1px solid var(--line); border-radius:18px; padding:22px; text-align:center; margin-bottom:14px;}
+  .mission .lbl{color:var(--muted); font-size:12px; text-transform:uppercase; letter-spacing:1px;}
+  .target{font-family:var(--serif); font-size:40px; font-weight:600; margin:4px 0 18px; color:var(--txt);}
+  .words{display:flex; flex-wrap:wrap; gap:8px; justify-content:center;}
+  .word{background:var(--accent); color:#fff; font-weight:700; padding:8px 14px; border-radius:30px; font-size:16px;}
+  .banner{border-radius:14px; padding:16px; margin-bottom:14px; text-align:center;}
+  .banner.warn{background:#3a2a10; border:1px solid #6e5320;}
+  .banner.info{background:#10243a; border:1px solid #204a6e;}
+  .row{display:flex; gap:10px;}
+  .row button{flex:1;}
+  .feed{font-size:13px; color:var(--muted); text-align:center; margin-top:6px; min-height:18px;}
+  .winner{font-family:var(--serif); font-size:40px; font-weight:600; color:var(--accent2); text-align:center; margin:12px 0 4px;}
+  .statline{display:flex; justify-content:space-around; margin:14px 0 4px; color:var(--muted); font-size:13px;}
+  .statline b{display:block; color:var(--txt); font-size:22px;}
+  .you-dead{background:#23151a; border:1px solid #4a2530; border-radius:16px; padding:22px; text-align:center; margin-bottom:14px;}
+  .pulse{animation:pulse 1.4s infinite;}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.55}}
+  .copyhint{cursor:pointer;}
+  .seg{display:flex; gap:8px;}
+  .seg-btn{flex:1; padding:13px 8px; font-size:15px; font-weight:700; border-radius:12px;
+    background:var(--panel2); border:1px solid var(--line); color:var(--muted); cursor:pointer; transition:all .15s;}
+  .seg-btn.active{background:var(--accent); border-color:var(--accent); color:#fff;}
+  .seg-btn:focus-visible{outline:2px solid var(--accent2); outline-offset:2px;}
+  .kill li{justify-content:flex-start;}
+  .kill .v{text-decoration:line-through; opacity:.7;}
+  .kill .by{margin-left:auto; font-size:12px; color:var(--muted);}
+  .kill .x{color:var(--accent); font-weight:800;}
+  .recap{list-style:none; counter-reset:r; padding:0; margin:10px 0 0;}
+  .recap li{counter-increment:r; display:flex; align-items:center; gap:10px; padding:11px 12px;
+    background:var(--panel2); border-radius:10px; margin-bottom:8px; font-size:15px;}
+  .recap li:before{content:counter(r); width:22px; height:22px; flex:none; border-radius:50%;
+    background:var(--accent); color:#fff; font-size:12px; font-weight:700; display:flex;
+    align-items:center; justify-content:center;}
+  .recap .a{font-weight:700;}
+  .recap .knife{color:var(--accent);}
+  .recap .vv{text-decoration:line-through; opacity:.75;}
+  .recap .crown{margin-left:auto;}
+  .flash-overlay{position:fixed; inset:0; background:rgba(8,4,6,.78); backdrop-filter:blur(3px);
+    display:flex; align-items:center; justify-content:center; padding:24px; z-index:50;}
+  .flash-box{background:linear-gradient(165deg,#2a161d,#1a0e13); border:1px solid var(--accent);
+    border-radius:20px; padding:28px 24px; max-width:380px; width:100%; text-align:center;
+    box-shadow:0 20px 60px rgba(0,0,0,.6), 0 0 50px rgba(177,18,38,.25); animation:pop .25s ease-out;}
+  .flash-emoji{font-size:54px; line-height:1;}
+  .flash-text{font-family:var(--serif); font-size:23px; line-height:1.25; margin:14px 0 20px; color:var(--txt);}
+  #flashOk{background:var(--accent2); color:#1a0e13;}
+  @keyframes pop{0%{transform:scale(.85); opacity:0}100%{transform:scale(1); opacity:1}}
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none !important; transition:none !important;}
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <h1 class="logo">
+    <span class="l1">THE</span>
+    <span class="l2">HIT LIST</span>
+    <span class="rings">&#127919; BACH PARTY &middot; MEXICO &#127865;</span>
+  </h1>
+  <div class="tag">Get your target to say the word. Trust no one &mdash; not even at the pool bar.</div>
+  <div id="err" class="err hidden"></div>
+
+  <!-- HOME -->
+  <section id="home">
+    <div class="card">
+      <label>Your name</label>
+      <input id="name" maxlength="20" placeholder="e.g. Denny" autocomplete="off" />
+      <button id="createBtn">Create a room</button>
+    </div>
+    <div class="divider">OR JOIN ONE</div>
+    <div class="card">
+      <label>Room code</label>
+      <input id="joinCode" class="code" maxlength="4" placeholder="ABCD" autocomplete="off" />
+      <button id="joinBtn" class="secondary">Join room</button>
+    </div>
+    <div class="center muted" style="margin-top:auto;padding-top:20px;">
+      Best with 4+ players, each on their own phone.
+    </div>
+  </section>
+
+  <!-- LOBBY -->
+  <section id="lobby" class="hidden">
+    <div class="card center">
+      <label>Room code &middot; tap to copy</label>
+      <div id="roomCode" class="roomcode copyhint"></div>
+      <div class="muted" style="margin-top:8px;">Share this code with your friends</div>
+    </div>
+    <div class="card">
+      <label>Players (<span id="pcount">0</span>)</label>
+      <ul id="lobbyPlayers" class="players"></ul>
+    </div>
+    <div id="hostStart">
+      <div class="card" style="margin-bottom:14px;">
+        <label>Word deck</label>
+        <div class="seg">
+          <button type="button" class="seg-btn active" data-pack="classic">Classic</button>
+          <button type="button" class="seg-btn" data-pack="spicy">Rated R &#128520;</button>
+        </div>
+        <div id="packHint" class="muted" style="margin-top:8px;">All-ages everyday words.</div>
+      </div>
+      <button id="startBtn">Start game</button>
+      <div class="muted center" style="margin-top:8px;">Need at least 2 players.</div>
+    </div>
+    <div id="waitStart" class="muted center hidden pulse" style="padding:14px;">Waiting for the host to start&hellip;</div>
+    <button id="leaveBtn" class="ghost" style="margin-top:auto;">Leave room</button>
+  </section>
+
+  <!-- PLAYING -->
+  <section id="playing" class="hidden">
+    <!-- incoming claim (you are the victim) -->
+    <div id="incoming" class="banner warn hidden">
+      <div style="font-weight:700;margin-bottom:10px;"><span id="claimAssassin"></span> claims they got you!</div>
+      <div class="muted" style="margin-bottom:12px;">Did they really get you to say one of their words?</div>
+      <div class="row">
+        <button id="confirmBtn" class="green">Yep, they got me</button>
+        <button id="disputeBtn" class="secondary">Nope, dispute</button>
+      </div>
+    </div>
+
+    <!-- alive mission view -->
+    <div id="aliveView">
+      <div class="mission">
+        <div class="lbl">Your target</div>
+        <div id="targetName" class="target"></div>
+        <div class="lbl">Get them to say</div>
+        <div id="wordList" class="words"></div>
+      </div>
+
+      <div id="claimArea">
+        <button id="claimBtn">I got them to say it</button>
+      </div>
+      <div id="waitingClaim" class="banner info hidden">
+        <div class="pulse">Waiting for <span id="waitTarget"></span> to confirm&hellip;</div>
+        <button id="cancelClaimBtn" class="ghost" style="margin-top:8px;">Cancel claim</button>
+      </div>
+
+      <div class="statline">
+        <div>Kills<b id="myKills">0</b></div>
+        <div>Players left<b id="aliveCount">0</b></div>
+      </div>
+    </div>
+
+    <!-- eliminated view -->
+    <div id="deadView" class="hidden">
+      <div class="you-dead">
+        <div style="font-size:40px;">&#128128;</div>
+        <div style="font-size:22px;font-weight:800;margin:8px 0;">You've been eliminated</div>
+        <div class="muted">Taken out by <b id="killedBy"></b>. Stick around and watch the carnage.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <label>The hunt</label>
+      <ul id="gamePlayers" class="players"></ul>
+    </div>
+
+    <div class="card">
+      <label>Kill list <span id="killCount" class="muted"></span></label>
+      <ul id="killList" class="players kill"></ul>
+      <div id="killEmpty" class="muted">No casualties yet. Stay sharp.</div>
+    </div>
+
+    <div id="feed" class="feed"></div>
+  </section>
+
+  <!-- ENDED -->
+  <section id="ended" class="hidden">
+    <div class="card center">
+      <div style="font-size:46px;">&#127942;</div>
+      <div class="winner" id="winnerName"></div>
+      <div class="muted">is the last one standing.</div>
+      <ul id="finalPlayers" class="players" style="margin-top:18px;text-align:left;"></ul>
+    </div>
+
+    <div class="card">
+      <label>How it all went down</label>
+      <ol id="recapList" class="recap"></ol>
+      <div id="recapEmpty" class="muted">No eliminations recorded.</div>
+    </div>
+    <div id="hostRestart"><button id="restartBtn" class="green">Play again</button></div>
+    <div id="waitRestart" class="muted center hidden pulse" style="padding:14px;">Waiting for the host to restart&hellip;</div>
+    <button id="leaveBtn2" class="ghost" style="margin-top:14px;">Leave game</button>
+  </section>
+
+  <!-- Pop-up overlay: death send-off (victim) or VIP takedown (killer) -->
+  <div id="flash" class="flash-overlay hidden">
+    <div class="flash-box">
+      <div id="flashEmoji" class="flash-emoji">&#128128;</div>
+      <div id="flashText" class="flash-text"></div>
+      <button id="flashOk">OK</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+let state = { code:null, playerId:null, es:null, pack:"classic" };
+const PACK_HINTS = {
+  classic: "All-ages everyday words.",
+  spicy: "Boozy, crude, wedding-roast humor. Adults only \u{1F608}"
+};
+
+function showError(msg){
+  const e = $("err"); e.textContent = msg; e.classList.remove("hidden");
+  setTimeout(()=>e.classList.add("hidden"), 4000);
+}
+async function post(path, body){
+  const r = await fetch(path, {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(body)});
+  const data = await r.json().catch(()=>({}));
+  if(!r.ok){ showError(data.error || "Something went wrong."); throw new Error(data.error||"err"); }
+  return data;
+}
+function show(section){
+  ["home","lobby","playing","ended"].forEach(s=>$(s).classList.toggle("hidden", s!==section));
+}
+
+// ---- session persistence (survives a phone refresh) ----
+const SESSION_KEY = "tddup-session";
+function saveSession(){
+  try{ localStorage.setItem(SESSION_KEY, JSON.stringify({code:state.code, playerId:state.playerId})); }catch(e){}
+}
+function clearSession(){
+  try{ localStorage.removeItem(SESSION_KEY); }catch(e){}
+}
+
+// ---- connect SSE ----
+function connect(){
+  saveSession();
+  if(state.es) state.es.close();
+  const es = new EventSource(`/events?code=${state.code}&playerId=${state.playerId}`);
+  state.es = es;
+  es.onmessage = (ev)=>{ try{ render(JSON.parse(ev.data)); }catch(e){} };
+  es.onerror = ()=>{ /* EventSource auto-reconnects */ };
+}
+
+// ---- render ----
+let lastFlashId = null;
+function render(s){
+  if(s.type !== "state") return;
+  if(s.gameState === "lobby") renderLobby(s);
+  else if(s.gameState === "playing") renderPlaying(s);
+  else if(s.gameState === "ended") renderEnded(s);
+  // VIP takedown overlay (bride/groom) — show once per new flash
+  if(s.flash && s.flash.id !== lastFlashId){
+    lastFlashId = s.flash.id;
+    $("flashEmoji").textContent = s.flash.emoji || "\u{1F480}";
+    $("flashText").textContent = s.flash.text;
+    $("flashOk").textContent = s.flash.btn || "OK";
+    $("flash").classList.remove("hidden");
+  }
+}
+function renderKillList(s){
+  const ul = $("killList"); ul.innerHTML="";
+  const elims = s.eliminations || [];
+  $("killCount").textContent = elims.length ? `(${elims.length})` : "";
+  $("killEmpty").style.display = elims.length ? "none" : "block";
+  elims.forEach(e=>{
+    const li=document.createElement("li");
+    const x=document.createElement("span"); x.className="x"; x.textContent="✗"; li.appendChild(x);
+    const v=document.createElement("span"); v.className="v"; v.textContent=e.victim; li.appendChild(v);
+    const by=document.createElement("span"); by.className="by"; by.textContent="by "+e.assassin; li.appendChild(by);
+    ul.appendChild(li);
+  });
+}
+
+function playerLi(p, opts={}){
+  const li = document.createElement("li");
+  if(!p.alive) li.className = "dead";
+  const dot = document.createElement("span");
+  dot.className = "dot" + (p.connected ? " on":"");
+  li.appendChild(dot);
+  const name = document.createElement("span");
+  name.textContent = p.name + (p.isYou ? " (you)":"");
+  li.appendChild(name);
+  if(p.isHost){ const b=document.createElement("span"); b.className="badge host"; b.textContent="HOST"; li.appendChild(b); }
+  if(opts.showKills && p.alive){ const b=document.createElement("span"); b.className="badge"; b.textContent=p.kills+" kills"; li.appendChild(b); }
+  if(!p.alive){ const sk=document.createElement("span"); sk.className="skull"; sk.textContent="\u{1F480}"; li.appendChild(sk); }
+  return li;
+}
+
+function renderLobby(s){
+  show("lobby");
+  $("roomCode").textContent = s.code;
+  $("pcount").textContent = s.players.length;
+  const ul = $("lobbyPlayers"); ul.innerHTML="";
+  s.players.forEach(p=>ul.appendChild(playerLi(p)));
+  $("hostStart").classList.toggle("hidden", !s.isHost);
+  $("waitStart").classList.toggle("hidden", s.isHost);
+  $("startBtn").disabled = s.players.length < 2;
+}
+
+function renderPlaying(s){
+  show("playing");
+  const alive = s.you && s.you.alive;
+  $("aliveView").classList.toggle("hidden", !alive);
+  $("deadView").classList.toggle("hidden", alive);
+
+  // incoming claim (victim)
+  if(s.incomingClaim){
+    $("incoming").classList.remove("hidden");
+    $("claimAssassin").textContent = s.incomingClaim.assassinName;
+    $("incoming").dataset.claimId = s.incomingClaim.claimId;
+  } else {
+    $("incoming").classList.add("hidden");
+  }
+
+  if(alive){
+    $("targetName").textContent = s.mission.targetName;
+    const wl = $("wordList"); wl.innerHTML="";
+    s.mission.words.forEach(w=>{ const d=document.createElement("span"); d.className="word"; d.textContent=w; wl.appendChild(d); });
+    // outgoing claim state
+    if(s.outgoingClaim){
+      $("claimArea").classList.add("hidden");
+      $("waitingClaim").classList.remove("hidden");
+      $("waitTarget").textContent = s.outgoingClaim.targetName;
+    } else {
+      $("claimArea").classList.remove("hidden");
+      $("waitingClaim").classList.add("hidden");
+    }
+    $("myKills").textContent = s.you.kills;
+    $("aliveCount").textContent = s.aliveCount;
+  } else {
+    $("killedBy").textContent = s.eliminatedBy || "someone";
+  }
+
+  const ul = $("gamePlayers"); ul.innerHTML="";
+  s.players.forEach(p=>ul.appendChild(playerLi(p,{showKills:true})));
+  renderKillList(s);
+  $("feed").textContent = s.lastEvent || "";
+}
+
+function renderEnded(s){
+  show("ended");
+  $("winnerName").textContent = s.winner || "Nobody";
+  const ul = $("finalPlayers"); ul.innerHTML="";
+  [...s.players].sort((a,b)=>b.kills-a.kills).forEach(p=>ul.appendChild(playerLi(p,{showKills:true})));
+  renderRecap(s);
+  $("hostRestart").classList.toggle("hidden", !s.isHost);
+  $("waitRestart").classList.toggle("hidden", s.isHost);
+}
+function renderRecap(s){
+  const ol = $("recapList"); ol.innerHTML="";
+  // eliminations are stored newest-first; reverse for chronological story order
+  const chrono = [...(s.eliminations || [])].reverse();
+  $("recapEmpty").style.display = chrono.length ? "none" : "block";
+  chrono.forEach((e, i)=>{
+    const li = document.createElement("li");
+    const a = document.createElement("span"); a.className="a"; a.textContent = e.assassin;
+    const k = document.createElement("span"); k.className="knife"; k.textContent = "🔪";
+    const v = document.createElement("span"); v.className="vv"; v.textContent = e.victim;
+    li.append(a, k, v);
+    if(i === chrono.length - 1 && s.winner === e.assassin){
+      const c = document.createElement("span"); c.className="crown"; c.textContent = "👑"; li.appendChild(c);
+    }
+    ol.appendChild(li);
+  });
+}
+
+// ---- events ----
+$("createBtn").onclick = async ()=>{
+  const name = $("name").value.trim();
+  if(!name) return showError("Enter your name first.");
+  const d = await post("/create",{name});
+  state.code=d.code; state.playerId=d.playerId; connect();
+};
+$("joinBtn").onclick = async ()=>{
+  const name = $("name").value.trim();
+  const code = $("joinCode").value.trim().toUpperCase();
+  if(!name) return showError("Enter your name first.");
+  if(code.length<4) return showError("Enter the 4-letter room code.");
+  const d = await post("/join",{name,code});
+  state.code=d.code; state.playerId=d.playerId; connect();
+};
+$("joinCode").addEventListener("input", e=>{ e.target.value = e.target.value.toUpperCase(); });
+document.querySelectorAll(".seg-btn").forEach(btn=>{
+  btn.onclick = ()=>{
+    state.pack = btn.dataset.pack;
+    document.querySelectorAll(".seg-btn").forEach(b=>b.classList.toggle("active", b===btn));
+    $("packHint").textContent = PACK_HINTS[state.pack] || "";
+  };
+});
+$("startBtn").onclick = ()=>post("/start",{code:state.code, playerId:state.playerId, pack:state.pack});
+$("claimBtn").onclick = ()=>post("/claim",{code:state.code, playerId:state.playerId});
+$("cancelClaimBtn").onclick = ()=>post("/cancelClaim",{code:state.code, playerId:state.playerId});
+$("confirmBtn").onclick = ()=>post("/respond",{code:state.code, playerId:state.playerId, claimId:$("incoming").dataset.claimId, decision:"confirm"});
+$("disputeBtn").onclick = ()=>post("/respond",{code:state.code, playerId:state.playerId, claimId:$("incoming").dataset.claimId, decision:"dispute"});
+$("restartBtn").onclick = ()=>post("/restart",{code:state.code, playerId:state.playerId});
+$("flashOk").onclick = ()=>{
+  $("flash").classList.add("hidden");
+  post("/ackFlash",{code:state.code, playerId:state.playerId}).catch(()=>{});
+};
+const leave = async ()=>{
+  await post("/leave",{code:state.code, playerId:state.playerId}).catch(()=>{});
+  if(state.es) state.es.close();
+  clearSession();
+  state={code:null,playerId:null,es:null,pack:"classic"};
+  show("home");
+};
+$("leaveBtn").onclick = leave;
+$("leaveBtn2").onclick = leave;
+$("roomCode").onclick = ()=>{
+  navigator.clipboard?.writeText(state.code).then(()=>showError("Code copied!"));
+};
+
+// ---- auto-rejoin on load (e.g. after a phone refresh) ----
+(async function init(){
+  let saved=null;
+  try{ saved = JSON.parse(localStorage.getItem(SESSION_KEY)||"null"); }catch(e){}
+  if(!saved || !saved.code || !saved.playerId){ show("home"); return; }
+  try{
+    const r = await fetch(`/check?code=${encodeURIComponent(saved.code)}&playerId=${encodeURIComponent(saved.playerId)}`);
+    const d = await r.json();
+    if(d.valid){
+      state.code = saved.code; state.playerId = saved.playerId;
+      connect();
+    } else {
+      clearSession(); show("home");
+    }
+  }catch(e){ show("home"); }
+})();
+</script>
+</body>
+</html>

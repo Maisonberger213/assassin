@@ -1,0 +1,13 @@
+{
+  "name": "the-hit-list",
+  "version": "1.0.0",
+  "description": "The Hit List - a real-time party game: get your target to say your secret word, then absorb their words and target. Last one standing wins.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=16"
+  },
+  "license": "MIT"
+}
