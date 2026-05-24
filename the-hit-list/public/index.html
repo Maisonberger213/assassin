@@ -239,10 +239,24 @@
       <ol id="recapList" class="recap"></ol>
       <div id="recapEmpty" class="muted">No eliminations recorded.</div>
     </div>
+    <div id="shotPicker" class="card hidden">
+      <label>Now select one person</label>
+      <ul id="shotPickerList" class="players"></ul>
+    </div>
+
     <div id="hostRestart"><button id="restartBtn" class="green">Play again</button></div>
     <div id="waitRestart" class="muted center hidden pulse" style="padding:14px;">Waiting for the host to restart&hellip;</div>
     <button id="leaveBtn2" class="ghost" style="margin-top:14px;">Leave game</button>
   </section>
+
+  <!-- Shot picker result overlay -->
+  <div id="shotResult" class="flash-overlay hidden">
+    <div class="flash-box">
+      <div class="flash-emoji">&#127865;</div>
+      <div id="shotResultText" class="flash-text"></div>
+      <button id="shotResultOk" style="background:var(--accent2);color:#1a0e13;">Let's go</button>
+    </div>
+  </div>
 
   <!-- Pop-up overlay: death send-off (victim) or VIP takedown (killer) -->
   <div id="flash" class="flash-overlay hidden">
@@ -403,6 +417,23 @@ function renderEnded(s){
   renderRecap(s);
   $("hostRestart").classList.toggle("hidden", !s.isHost);
   $("waitRestart").classList.toggle("hidden", s.isHost);
+  // Shot picker: only shown to the winner, only if they haven't picked yet
+  const isWinner = s.you && s.winner && s.you.name === s.winner;
+  const pickerEl = $("shotPicker");
+  if(isWinner && pickerEl.classList.contains("hidden") && $("shotResult").classList.contains("hidden")){
+    pickerEl.classList.remove("hidden");
+    const pl = $("shotPickerList"); pl.innerHTML="";
+    s.players.filter(p=>p.name!==s.you.name).forEach(p=>{
+      const li=playerLi(p);
+      li.style.cursor="pointer";
+      li.onclick=()=>{
+        pickerEl.classList.add("hidden");
+        $("shotResultText").textContent=`You and ${p.name} have to go prepare shots for everyone`;
+        $("shotResult").classList.remove("hidden");
+      };
+      pl.appendChild(li);
+    });
+  }
 }
 function renderRecap(s){
   const ol = $("recapList"); ol.innerHTML="";
@@ -464,6 +495,7 @@ const leave = async ()=>{
 };
 $("leaveBtn").onclick = leave;
 $("leaveBtn2").onclick = leave;
+$("shotResultOk").onclick = ()=>$("shotResult").classList.add("hidden");
 $("roomCode").onclick = ()=>{
   navigator.clipboard?.writeText(state.code).then(()=>showError("Code copied!"));
 };
