@@ -271,7 +271,7 @@
 
 <script>
 const $ = (id) => document.getElementById(id);
-let state = { code:null, playerId:null, es:null, pack:"classic" };
+let state = { code:null, playerId:null, es:null, pack:"classic", shotPickerDone:false };
 ["/rebecca.jpeg", "/benson.jpeg", "/benson-darryl.jpeg", "/benson-darryl2.jpeg"].forEach(src => { new Image().src = src; });
 const PACK_HINTS = {
   classic: "All-ages everyday words.",
@@ -403,8 +403,6 @@ function renderPlaying(s){
     $("killedBy").textContent = s.eliminatedBy || "someone";
   }
 
-  const ul = $("gamePlayers"); ul.innerHTML="";
-  s.players.forEach(p=>ul.appendChild(playerLi(p,{showKills:true})));
   renderKillList(s);
   $("feed").textContent = s.lastEvent || "";
 }
@@ -420,13 +418,14 @@ function renderEnded(s){
   // Shot picker: only shown to the winner, only if they haven't picked yet
   const isWinner = s.you && s.winner && s.you.name === s.winner;
   const pickerEl = $("shotPicker");
-  if(isWinner && pickerEl.classList.contains("hidden") && $("shotResult").classList.contains("hidden")){
+  if(isWinner && !state.shotPickerDone){
     pickerEl.classList.remove("hidden");
     const pl = $("shotPickerList"); pl.innerHTML="";
     s.players.filter(p=>p.name!==s.you.name).forEach(p=>{
       const li=playerLi(p);
       li.style.cursor="pointer";
       li.onclick=()=>{
+        state.shotPickerDone = true;
         pickerEl.classList.add("hidden");
         $("shotResultText").textContent=`You and ${p.name} have to go prepare shots for everyone`;
         $("shotResult").classList.remove("hidden");
@@ -497,7 +496,12 @@ $("leaveBtn").onclick = leave;
 $("leaveBtn2").onclick = leave;
 $("shotResultOk").onclick = ()=>$("shotResult").classList.add("hidden");
 $("roomCode").onclick = ()=>{
-  navigator.clipboard?.writeText(state.code).then(()=>showError("Code copied!"));
+  navigator.clipboard?.writeText(state.code).then(()=>{
+    const el = $("roomCode");
+    const orig = el.textContent;
+    el.textContent = "Copied!";
+    setTimeout(()=>{ el.textContent = orig; }, 1500);
+  });
 };
 
 // ---- auto-rejoin on load (e.g. after a phone refresh) ----
