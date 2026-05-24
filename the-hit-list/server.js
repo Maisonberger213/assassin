@@ -128,7 +128,6 @@ const RELATIONSHIP_LINES = [
   { k: IS.colin, v: IS.maya, lines: [
     "Maya eliminated. That's one way to shoot your shot.",
     "She couldn't handle your game. Maya eliminated.",
-    "Maya is down. The situationship is officially over.",
     "Colin with zero hesitation. Maya never saw it coming.",
   ]},
   { k: IS.maya, v: IS.colin, lines: [
