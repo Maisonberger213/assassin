@@ -330,6 +330,7 @@ function processKill(room, assassinId, victimId) {
       id: fid(),
       text: pick(VIP_LINES[role]),
       emoji: role === "bride" ? "👰" : "🤵",
+      img: role === "bride" ? "/rebecca.jpeg" : "/benson.jpeg",
       btn: "Hell yeah",
     };
     room.lastEvent = `${a.name} took out the ${role === "bride" ? "BRIDE 👰" : "GROOM 🤵"}!`;
