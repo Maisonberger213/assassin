@@ -107,12 +107,11 @@ const RELATIONSHIP_LINES = [
   { k: IS.norm, v: IS.aileen, lines: [
     "You just eliminated your wife. Bold move, Norman.",
     "Aileen is down. Enjoy the silence while it lasts.",
-    "Got your own wife. The couples therapist is shaking.",
     "Aileen eliminated. You'll be sleeping on the couch for this.",
     "Took out Aileen. She's already planning her revenge.",
   ]},
   { k: IS.mel, v: IS.denny, lines: [
-    "You killed your own boyfriend. Iconic couple behavior.",
+    "How long have you been waiting to do this?",
     "Denny is down. He should've seen that coming.",
     "Got your man. Zero remorse. We respect it.",
     "Denny eliminated. And yet somehow this makes you love each other more.",
@@ -122,7 +121,6 @@ const RELATIONSHIP_LINES = [
     "You just bodied your girlfriend. Smooth.",
     "Mel is down. Hope the couch is comfortable.",
     "Eliminated Mel. Bold move for a man who needs a ride home.",
-    "Got your girl. She's already plotting.",
     "Mel eliminated. You're so dead when this game ends.",
   ]},
   { k: IS.colin, v: IS.maya, lines: [
@@ -236,18 +234,18 @@ const RELATIONSHIP_LINES = [
     "Benson is down. Darryl's toast just got very uncomfortable.",
   ]},
   { k: IS.benson, v: IS.mel, lines: [
-    "Finally. Benson has been waiting for this all trip.",
-    "Mel eliminated. Benson is absolutely delighted.",
-    "You got Mel. You've been wanting to do that since day one.",
-    "Mel is down. Benson trying to hide his smile. Failing.",
-    "Benson eliminates Mel. He told everyone he would.",
+    "Finally. Been wanting to do this since Mel's first sentence of the trip.",
+    "Mel eliminated. Benson is physically incapable of hiding how happy he is.",
+    "You've been chirping Mel for days. Now you've backed it up.",
+    "Mel is down. Benson's face says it all. Pure, unfiltered joy.",
+    "Got Mel. Benson would say he feels bad. He does not feel bad.",
   ]},
   { k: IS.mel, v: IS.benson, lines: [
-    "You just killed Benson. He's furious and impressed at the same time.",
-    "Benson eliminated by Mel. He'll never admit he walked into that.",
-    "Took out Benson. He's going to talk about this for years.",
-    "Benson is down. Mel with the kill she's been planning all trip.",
-    "Mel eliminates Benson. He hates that he respects it.",
+    "Benson is down. Furious. Weirdly turned on by this. It's complicated.",
+    "You just took out the guy who can't stop talking about how much he can't stand you. He's devastated.",
+    "Benson eliminated. He'll never admit he walked right into it.",
+    "Got Benson. He hates you. He loves you. He hates that he loves you.",
+    "Mel takes out Benson. Their whole situationship just flashed before his eyes.",
   ]},
 ];
 function getRelationship(killerName, victimName) {
