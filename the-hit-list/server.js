@@ -90,7 +90,7 @@ const IS = {
   denny:   n => ["denny","dennis"].some(x => n === x || n.includes(x)),
   colin:   n => ["colin","collin"].some(x => n === x || n.includes(x)),
   maya:    n => ["maya","maia"].some(x => n === x || n.includes(x)),
-  kelsey:  n => ["kelsey","kelsie","kelsi"].some(x => n === x || n.includes(x)),
+  kelsey:  n => ["kelsey","kelsie","kelsi","kelci","kelcie"].some(x => n === x || n.includes(x)),
   leo:     n => n === "leo" || ["leon","leonardo"].some(x => n.includes(x)),
   alysha:  n => ["alysha","alisha","alyssa","alicia","alycia"].some(x => n === x || n.includes(x)),
   julian:  n => ["julian","julien","julio"].some(x => n === x || n.includes(x)),
