@@ -63,18 +63,18 @@ function vipRole(name) {
 }
 const VIP_LINES = {
   bride: [
-    "You just whacked the BRIDE. 👰 Bold move at her own bach party. Hope it was worth the dirty looks.",
-    "The BRIDE is DOWN. 👰 Something borrowed, something blue, something she's gonna make you pay for at the reception.",
-    "You put a ring on it... then took her out. 👰 Savage. The groom is shaking.",
-    "BRIDE eliminated. 👰 'Here comes the bride' — nope, there she goes. Cold.",
-    "You sent the BRIDE to an early grave. 👰 RIP. Your invite to the wedding is officially under review.",
+    "You just bodied the bride. Bold. Stupid. Iconic.",
+    "Rebecca is DOWN. Your wedding invite is under review.",
+    "Took out the bride at her own party. You sick freak.",
+    "The bride is dead. The maid of honor is already plotting.",
+    "Rebecca eliminated. She WILL remember this.",
   ],
   groom: [
-    "You took out the GROOM. 🤵 The bride's gonna have QUESTIONS.",
-    "GROOM eliminated. 🤵 Cold feet? Nah, you gave him cold everything.",
-    "'Till death do us part' — turns out it was YOU. 🤵 Awkward speech incoming.",
-    "The GROOM is DOWN. 🤵 Somebody owes the bride a very uncomfortable explanation.",
-    "You whacked the GROOM at his own send-off. 🤵 Absolute menace. We respect it.",
+    "You just killed the groom. She's gonna find out.",
+    "Benson is down. Sleep with one eye open.",
+    "Groom eliminated. Cold, calculated, no remorse.",
+    "You whacked the groom at his own send-off. Sicko behavior.",
+    "Benson is dead. Rebecca's already texting the group chat.",
   ],
 };
 function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
@@ -82,17 +82,17 @@ function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 // Dark-humour send-off shown on the screen of whoever just got eliminated.
 // Mexico bachelor-party flavor — R-rated, crude, no mercy. Adults only.
 const DEATH_LINES = [
-  "Dead. You folded like a cheap beach chair the second someone said the word. Embarrassing. Go drown it in a double.",
-  "Eliminated. You couldn't keep your damn mouth shut for ONE day in paradise. Park your ass at the bar and reflect.",
-  "You got played harder than your liver this weekend. RIP. Pour one out, you absolute amateur. 🍻",
-  "Out. Your big mouth wrote a check your survival skills couldn't cash. Adiós, dumbass.",
-  "Dead. You lasted about as long as your dignity did at last night's open bar. Tragic. Order the expensive shots.",
-  "Knocked out. Out-smarted at a bachelor party — by people THIS hungover. Brutal. Sit down and hydrate, champ.",
-  "You're done. Should've shut up, but nooo, you just HAD to talk. Enjoy the cheap seats and the expensive hangover.",
-  "Eliminated. You choked on that word like it was your fifth taco. Shameful. Go lie down before you hurt yourself.",
-  "Dead and buried in the sand with the rest of your terrible decisions this trip. We'll spill a Modelo on your grave.",
-  "Game over. Somewhere your ex just felt a little wave of joy and has no idea why. You did that. Drink up.",
-  "You're out. Talked yourself into an early grave — at your big age, too. The tequila won't judge you. We will. Loudly.",
+  "Dead. Your mouth betrayed you. Classic.",
+  "Out. Got played at a bach party. Embarrassing.",
+  "Eliminated. Sit down, shut up, drink something.",
+  "Your big mouth dug your grave. RIP, idiot.",
+  "Gone. Somewhere your ex just smiled and doesn't know why.",
+  "You got got. The tequila won, you lost.",
+  "Dead. Should've shut up. Didn't. Here we are.",
+  "Cooked. You lasted shorter than a Tulum sunset.",
+  "Out. Your ancestors are cringing.",
+  "Eliminated. Pour one out for your dignity too.",
+  "You talked yourself into a grave. Absolute clown behavior.",
 ];
 
 // ---- In-memory state ---------------------------------------------------
